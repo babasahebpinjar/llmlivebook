@@ -19,27 +19,15 @@ app = Flask(__name__)
 
 greetings = ["hi", "hello", "hello there", "hey"]
 
-#SLACK_SIGNING_SECRET = os.environ['SLACK_SIGNING_SECRET']
-#SLACK_SIGNING_SECRET = '25785962d541d481356de4dbae2ef9fb' # sherpababatest
-#SLACK_SIGNING_SECRET = 'e6c787153f4c46b4c2517dc1665ab0b6' #sherpaabc
-SLACK_SIGNING_SECRET = '94bc69180c42a755eb67407a4789fc68' #sherpaasic
-
-
-#slack_token = os.environ['SLACK_BOT_TOKEN']
-#slack_token = 'xoxb-5304562976659-5317485284017-WhfdpIWqWGx3p9WHkOic5qNU' #sherpababatest
-#slack_token = 'xoxb-4640689820821-5332468726450-hT9Fm73nxg72YEee4Hq2CAvw' #sherpaabc
-slack_token = 'xoxb-337418436452-5329680352485-U3ShgpknLtZpzzxVb7OTmRSL' #sherpaasic
-
-#VERIFICATION_TOKEN = os.environ['VERIFICATION_TOKEN']
-#VERIFICATION_TOKEN = 'ovSINFVeFOdJ6YSaCjjIbuSP' # sherpababatest
-#VERIFICATION_TOKEN = 'lpXG1aLKCBxivBLvtmnoy5O9' #sherpaabc
-VERIFICATION_TOKEN = '1pqOhlNbgArHTAWTPORdDFFw'
+SLACK_SIGNING_SECRET = '' #sherpaasic
+slack_token = '' #sherpaasic
+VERIFICATION_TOKEN = ''
 
 #instantiating slack client
 slack_client = WebClient(slack_token)
 
-#OPENAI_KEY = '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' # baba api key : Free quota over
-OPENAI_KEY = ''  # John's api-key, don't abuse!
+#OPENAI_KEY = ' # baba api key : Free quota over
+OPENAI_KEY = ''  
 os.environ['OPENAI_API_KEY'] = OPENAI_KEY
 
 # An example of one of your Flask app's routes
