@@ -1,0 +1,6 @@
+Flask
+slackeventsapi
+slackclient
+langchain
+fastapi
+PyPDF2
