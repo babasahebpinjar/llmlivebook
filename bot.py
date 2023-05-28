@@ -39,7 +39,7 @@ VERIFICATION_TOKEN = '1pqOhlNbgArHTAWTPORdDFFw'
 slack_client = WebClient(slack_token)
 
 #OPENAI_KEY = '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' # baba api key : Free quota over
-OPENAI_KEY = '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'  # John's api-key, don't abuse!
+OPENAI_KEY = ''  # John's api-key, don't abuse!
 os.environ['OPENAI_API_KEY'] = OPENAI_KEY
 
 # An example of one of your Flask app's routes
