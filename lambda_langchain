@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 from langchain.chat_models import ChatOpenAI
 from langchain import PromptTemplate, LLMChain
 
@@ -16,13 +17,9 @@ from langchain.schema import (
     SystemMessage
 )
 
-import json
-
-#import api_keys
-
 
 destination_bucket = "transcriptslangchain"
-destination_key = "transcript_" + source_key
+
 
 #instantiate chat model
 chat = ChatOpenAI(
@@ -140,7 +137,6 @@ def extract_topics_from_text(text, user_prompt):
     result = chat(chat_prompt.format_prompt(text=text, user_prompt=user_prompt).to_messages())
     return result.content
 
-
 def extract_metadata_as_json(essay):
     system_template = """You are a helpful assistant that preprocesses text, \
                       writings and presentation transcripts in the context of \
@@ -148,11 +144,19 @@ def extract_metadata_as_json(essay):
     
     system_prompt = SystemMessagePromptTemplate.from_template(system_template)
     
+    # human_template = """\
+    # Given the essay delimited in triple backticks, generate and extract important \
+    # information such as the title, speaker, summary, a list of key topics, and a list of important takeaways. \
+    # Format the reponse as a JSON object, with the keys 'Title', 'Topics', 'Speaker', \
+    # 'Summary', 'Topics', and 'Takeaways' as the keys. \
+    # \n\n \
+    # Essay:\n```{text}```"""
+    
     human_template = """\
     Given the essay delimited in triple backticks, generate and extract important \
-    information such as the title, speaker, summary, a list of key topics, and a list of important takeaways. \
+    information such as the title, speaker, summary, a list of key topics, and a list of important takeaways for each topic. \
     Format the reponse as a JSON object, with the keys 'Title', 'Topics', 'Speaker', \
-    'Summary', 'Topics', and 'Takeaways' as the keys. \
+    'Summary', and 'Topics' as the keys and each topic will be keys for list of takeaways. \
     \n\n \
     Essay:\n```{text}```"""
     human_prompt = HumanMessagePromptTemplate.from_template(human_template)
@@ -253,7 +257,7 @@ def lambda_handler(event, context):
     print("Extracting metadata completed")
     #print(metadata)
     
-    print(destination_key)
+    
     
     
      # Convert the metadata dictionary to JSON string
@@ -262,6 +266,8 @@ def lambda_handler(event, context):
     # Convert the JSON string to bytes
     metadata_bytes = metadata_json.encode('utf-8')
     
+    destination_key = "transcript_" + source_key.split(".")[0]
+    print(destination_key)
     s3_client.put_object(Body=metadata_bytes, Bucket=destination_bucket, Key=destination_key)
     
     return {
