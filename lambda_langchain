@@ -236,7 +236,7 @@ The essay is delimited in triple backticks:
   result = chat(chat_prompt.format_prompt(text=text).to_messages())
   return result.content
 
-def json2rst1(metadata):
+def json2rst2(metadata):
 	if not isinstance(metadata, dict):
 		raise ValueError("Input must be a JSON object")
 
@@ -258,6 +258,34 @@ def json2rst1(metadata):
 					result += f"\t\t* {takeaway}\n"
 
 	return result
+	
+	import json
+
+def json2rst1(metadata):
+	if not isinstance(metadata, dict):
+		raise ValueError("Input must be a JSON object")
+
+	result = ""
+	for key, value in metadata.items():
+		if key == "Title":
+			title_mark = "=" * len(f'{value}')
+			result += f"{title_mark}\n{value}\n{title_mark}\n"
+		elif key == "Speaker":
+			result += f"* {value} *\n\n"
+		elif key == "Summary":
+			title_mark = '-' * len(f'{key}')
+			result += f"Summary\n{title_mark}\n{value}\n\n"
+		elif key == "Topics":
+			result += "Topics:\n"
+			if isinstance(value, str):
+				value = json.loads(value)
+			for topic in value:
+				result += f"\t{topic['Topic']}\n"
+				for takeaway in topic['Takeaways']:
+					result += f"\t\t* {takeaway}\n"
+
+	return result
+
 
 
 
@@ -344,14 +372,18 @@ def lambda_handler(event, context):
 
     print(type(metadata_json))
     print(metadata_json)
-    # rst_filepath = r'./test.rst'
-    # json2rst(metadata, rst_filepath)
+    
+    rst_filepath = r'/tmp/test.rst'
+    json2rst(metadata, rst_filepath)
+    
     
     rst_bytes = json2rst1(json.loads(metadata_json))
-    destination_key = "transcript_" + source_key.split(".")[0]
+    destination_key = "transcript_" + source_key.split(".")[0] +".rst"
     print(destination_key)
     
-    s3_client.put_object(Body=rst_bytes, Bucket=destination_bucket, Key=destination_key)
+    s3_client.upload_file(rst_filepath, destination_bucket, destination_key)
+    
+    #s3_client.put_object(Body=rst_bytes, Bucket=destination_bucket, Key=destination_key)
     
     return {
         'statusCode': 200,
