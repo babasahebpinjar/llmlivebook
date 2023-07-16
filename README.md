@@ -46,3 +46,4 @@ This repository contains a chatbot implementation using Flask and Slack. The cha
 
 
 4.  Run ngrok for development
+5.  To create AWS lambda layer https://medium.com/sopmac-labs/langchain-aws-lambda-serverless-q-a-chatbot-203470b9906f
